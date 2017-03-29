@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,7 +31,6 @@ public class GameActivity extends AppCompatActivity {
     }
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lastTime=Calendar.getInstance().getTimeInMillis();
         //Получаем G для отладки
         Player.G = getIntent().getExtras().getInt("G");
 
@@ -48,6 +48,7 @@ public class GameActivity extends AppCompatActivity {
         //Загрузка картинок
         AssetManager assetManager=getAssets();
         Bitmap sprite=null;
+        mediaPlayer=new MediaPlayer();
         try {
             InputStream inputStream =assetManager.open("astronaut_small.png");
             sprite= BitmapFactory.decodeStream(inputStream);
@@ -55,24 +56,34 @@ public class GameActivity extends AppCompatActivity {
             background= BitmapFactory.decodeStream(inputStream);
             inputStream.close();
             assetManager = getAssets();
+
             AssetFileDescriptor descriptor = assetManager
                     .openFd("air_sound.mp3");
             airSound = soundPool.load(descriptor, 1);
+
+            descriptor = assetManager.openFd("Soundtrack-BoomBoom.mp3");
+            mediaPlayer.setDataSource(descriptor.getFileDescriptor(),
+                    descriptor.getStartOffset(), descriptor.getLength());
+            mediaPlayer.prepare();
+            mediaPlayer.setLooping(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
         map=Map.BuildMap(screen,new Player(screen.centerX(),screen.centerY(), sprite),this);
         renderView.setOnTouchListener(map);
+
     }
 
     protected void onResume() {
         super.onResume();
         renderView.resume();
+        mediaPlayer.start();
     }
 
     protected void onPause() {
         super.onPause();
         renderView.pause();
+        mediaPlayer.pause();
     }
     //Класс для прорисовки сцены в отдельном потоке
     class FastRenderView extends SurfaceView implements Runnable {
@@ -124,4 +135,5 @@ public class GameActivity extends AppCompatActivity {
     private SoundPool soundPool;
     private int airSound=-1;
     private long lastTime=0;
+    private MediaPlayer mediaPlayer;
 }
