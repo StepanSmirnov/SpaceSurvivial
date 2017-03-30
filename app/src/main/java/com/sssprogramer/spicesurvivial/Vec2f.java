@@ -51,13 +51,17 @@ public class Vec2f extends PointF {
         return diff(this, other).length();
     }
 
+    public float squared(){
+        return x*x+y*y;
+    }
+
     public static float lenSquared(PointF p1, PointF p2){
         PointF len=diff(p1,p2);
         return len.x*len.x+len.y*len.y;
     }
 
     public Vec2f normalize(){
-        return div(this,this.length());
+        return this.div(this.length());
     }
 
     public Vec2f rotate(double angle){
@@ -67,6 +71,10 @@ public class Vec2f extends PointF {
         x = (float) (vx * cosVal - vy * sinVal);
         y = (float) (vx * sinVal + vy * cosVal);
         return this;
+    }
+
+    public static Vec2f normalize(Vec2f v){
+        return div(v, v.length());
     }
 
     public static Vec2f negative(Vec2f vec2f){

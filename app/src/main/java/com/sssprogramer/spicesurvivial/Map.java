@@ -33,6 +33,7 @@ public class Map implements View.OnTouchListener{
                     new Vec2f(rnd.nextInt(space.right), rnd.nextInt(space.bottom))
             ));
         }
+        this.time=Calendar.getInstance().getTimeInMillis();
     }
 
     public void render(Canvas canvas) {
@@ -40,6 +41,7 @@ public class Map implements View.OnTouchListener{
         player.update();
         if (!space.contains(player.bounds)){
             player.offset(Vec2f.negative(player.velocity));
+            player.velocity.set(0,0);
         }
         if (player.pos.x<bounds.right && player.pos.x>bounds.left)
             offset.set(screen.centerX()-player.pos.x,offset.y);
@@ -63,6 +65,8 @@ public class Map implements View.OnTouchListener{
                 player.addForce(oPos,obj.mass);
         }
         player.draw(canvas);
+        canvas.drawText(String.valueOf((Calendar.getInstance().getTimeInMillis()-time)/1000),-offset.x+50,-offset.y+50,Styles.getInstance().score);
+//        canvas.drawText(String.valueOf(player.velocity.length()),-offset.x+200,-offset.y+50,Styles.getInstance().score);
     }
     //        Обработка касаний без multiTouch
     @Override
@@ -74,7 +78,7 @@ public class Map implements View.OnTouchListener{
         return true;
     }
     public static Map BuildMap(Rect screen, Player player, GameActivity activity){
-        Map map=new Map(screen,new Rect(0,0,1000,1000),player,activity);
+        Map map=new Map(screen,new Rect(0,0,1000,10000),player,activity);
 
         map.objects.add(new Star(20,25,new Vec2f(350,350),Styles.getInstance().yellow));
         map.objects.add(new Planet(10,10,new PointF(350,350),60,0.2,Styles.getInstance().green));
@@ -112,6 +116,7 @@ public class Map implements View.OnTouchListener{
     private GameActivity activity;
     private Vec2f offset=new Vec2f(0,0);
     private List<Star> background=new ArrayList<>(STARS_COUNT);
+    private long time=0;
     private static final int STARS_COUNT=500;
     private static final float MAX_STAR_R=2;
 };

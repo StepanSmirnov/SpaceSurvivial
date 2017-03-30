@@ -28,6 +28,11 @@ public class Styles {
         magenta.setStyle(Paint.Style.FILL);
         gray.setColor(Color.GRAY);
         gray.setStyle(Paint.Style.FILL);
+        score.setColor(Color.WHITE);
+        score.setStyle(Paint.Style.FILL);
+//        score.setTypeface();
+        score.setTextSize(28);
+        score.setTextAlign(Paint.Align.CENTER);
     }
     public Paint farStar=new Paint();
     public Paint green=new Paint();
@@ -36,5 +41,6 @@ public class Styles {
     public Paint black=new Paint();
     public Paint magenta=new Paint();
     public Paint gray=new Paint();
+    public Paint score=new Paint();
 
 }

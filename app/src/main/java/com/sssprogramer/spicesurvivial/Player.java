@@ -38,7 +38,7 @@ public class Player extends GameObject{
     @Override
     public Vec2f update(){
         velocity.add(Vec2f.mult(dir,ACCELERATION));
-        if (velocity.length()>5){
+        if (velocity.squared()>MAX_SPEED*MAX_SPEED){
             velocity.normalize().mult(MAX_SPEED);
         }
         offset(velocity);
@@ -60,12 +60,12 @@ public class Player extends GameObject{
         //Добавить в расчеты массу планеты и игрока
         Vec2f rel=Vec2f.diff(vector,pos);
         velocity.add(
-                rel.normalize().mult((float) (G*module*mass/Math.pow(rel.length(),2)))
+                Vec2f.normalize(rel).mult((float) (G*module*mass/Math.pow(rel.length(),2)))
         );
     }
     private Vec2f dir=new Vec2f();
-    private static final float ACCELERATION= (float) 0.9;
-    private static final float MAX_SPEED= (float) 1.5;
+    private static final float ACCELERATION= (float) 1.5;
+    private static final float MAX_SPEED= (float) 10;
     private static final double mass=1;
     private Bitmap bitmap;
 //    private List
