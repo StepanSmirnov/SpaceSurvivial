@@ -1,6 +1,7 @@
 package com.sssprogramer.spicesurvivial;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.PointF;
 
 import java.util.List;
@@ -11,10 +12,13 @@ import java.util.List;
  */
 
 public class StarSystem {
-    public StarSystem(PointF pos) {
-        center=pos;
+    public StarSystem(Star star) {
+        this.star=star;
+        planets.add(star);
     }
-    private final PointF center;
+    public void addPlanet(int mass, int size ,int orbit, float velocity/*, double startAngle*/, Paint style){
+        planets.add(new Planet(mass, size, star.pos, orbit, velocity, style));
+    }
     private Star star;
-    private List<Planet> planets;
+    private List<Star> planets;
 }

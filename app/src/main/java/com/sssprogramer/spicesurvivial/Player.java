@@ -23,8 +23,16 @@ public class Player extends GameObject{
         bounds=new Rect(x,y,x+bitmap.getWidth(),y + bitmap.getHeight());
         this.size=Math.min(bitmap.getWidth(),bitmap.getHeight())/2;
     }
+    //Удалить dir. Использовать addForce
     public void moveTo(float x, float y){
-        dir=Vec2f.diff(new PointF(x,y),pos).normalize();
+        if (co2>0) {
+            velocity.add(Vec2f.diff(new PointF(x,y), pos).normalize().mult(ACCELERATION));
+            if (velocity.squared()>MAX_SPEED_SQ){
+                velocity.normalize().mult(MAX_SPEED);
+            }
+            co2-=co2_rate;
+        }
+        else co2=0;
     }
     public void stop(){
         dir.set(0,0);
@@ -37,23 +45,21 @@ public class Player extends GameObject{
 
     @Override
     public Vec2f update(){
-        velocity.add(Vec2f.mult(dir,ACCELERATION));
-        if (velocity.squared()>MAX_SPEED*MAX_SPEED){
-            velocity.normalize().mult(MAX_SPEED);
-        }
+//        if (co2>0) {
+//            velocity.add(Vec2f.mult(dir,ACCELERATION));
+//            if (dir.length()>0) co2-=co2_rate;
+//        }
+//        else co2=0;
+//        if (velocity.squared()>MAX_SPEED*MAX_SPEED){
+//            velocity.normalize().mult(MAX_SPEED);
+//        }
         offset(velocity);
         return pos;
     }
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(bitmap,bounds.left,bounds.top,null);
-        //Для отладки
-//        Paint style=new Paint();
-//        style.setARGB(255,0,255,0);
-//        style.setStyle(Paint.Style.STROKE);
-//        canvas.drawRect(bounds,style);
-//        canvas.drawCircle(pos.x,pos.y,3,style);
+        canvas.drawBitmap(bitmap,pos.x-bitmap.getWidth()/2,pos.y-bitmap.getHeight()/2,null);
     }
 
     public void addForce(Vec2f vector, double module){
@@ -64,9 +70,11 @@ public class Player extends GameObject{
         );
     }
     private Vec2f dir=new Vec2f();
-    private static final float ACCELERATION= (float) 1.5;
-    private static final float MAX_SPEED= (float) 10;
+    public float co2=100;
+    private static double co2_rate=1;
+    private static final float ACCELERATION=1.5f;
+    private static final float MAX_SPEED= 10f;
+    private static final float MAX_SPEED_SQ= MAX_SPEED*MAX_SPEED;
     private static final double mass=1;
     private Bitmap bitmap;
-//    private List
 }

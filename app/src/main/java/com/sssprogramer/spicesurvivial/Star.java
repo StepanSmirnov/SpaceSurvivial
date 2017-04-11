@@ -9,7 +9,7 @@ import android.graphics.PointF;
  */
 
 public class Star extends GameObject{
-    public Star(int mass, float size, Vec2f center, Paint style) {
+    public Star(float mass, float size, Vec2f center, Paint style) {
         this.mass=mass;
         this.size=size;
         pos=center;
@@ -32,6 +32,6 @@ public class Star extends GameObject{
         canvas.drawCircle(pos.x,pos.y,size,style);
     }
 
-    public double mass=0;
+    public float mass=0;
     protected Paint style;
 }

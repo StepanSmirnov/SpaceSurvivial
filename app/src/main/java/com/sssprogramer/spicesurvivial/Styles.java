@@ -14,33 +14,31 @@ public class Styles {
     }
 
     private Styles() {
-        farStar.setARGB(255,0,255,200);
-        farStar.setStyle(Paint.Style.FILL);
-        green.setColor(Color.GREEN);
-        green.setStyle(Paint.Style.FILL);
-        yellow.setColor(Color.YELLOW);
-        yellow.setStyle(Paint.Style.FILL);
-        red.setColor(Color.RED);
-        red.setStyle(Paint.Style.FILL);
-        black.setColor(Color.BLACK);
-        black.setStyle(Paint.Style.FILL);
-        magenta.setColor(Color.MAGENTA);
-        magenta.setStyle(Paint.Style.FILL);
-        gray.setColor(Color.GRAY);
-        gray.setStyle(Paint.Style.FILL);
-        score.setColor(Color.WHITE);
-        score.setStyle(Paint.Style.FILL);
-//        score.setTypeface();
+        farStar=fromColor(Color.argb(255,0,255,200));
+        green=fromColor(Color.GREEN);
+        yellow=fromColor(Color.YELLOW);
+        red=fromColor(Color.RED);
+        black=fromColor(Color.BLACK);
+        magenta=fromColor(Color.MAGENTA);
+        gray=fromColor(Color.GRAY);
+        score=fromColor(Color.WHITE);
         score.setTextSize(28);
         score.setTextAlign(Paint.Align.CENTER);
     }
-    public Paint farStar=new Paint();
-    public Paint green=new Paint();
-    public Paint yellow=new Paint();
-    public Paint red=new Paint();
-    public Paint black=new Paint();
-    public Paint magenta=new Paint();
-    public Paint gray=new Paint();
-    public Paint score=new Paint();
 
+    public static Paint fromColor(int color){
+        Paint paint=new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(color);
+        return paint;
+    }
+
+    public Paint farStar;
+    public Paint green;
+    public Paint yellow;
+    public Paint red;
+    public Paint black;
+    public Paint magenta;
+    public Paint gray;
+    public Paint score;
 }

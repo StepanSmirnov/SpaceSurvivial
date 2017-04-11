@@ -13,49 +13,68 @@ import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.view.WindowManager;
 import android.content.res.AssetManager;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Calendar;
 
 
 public class GameActivity extends AppCompatActivity {
-    public void destroy(){
-        stopService(new Intent(this,GameActivity.class));
-    }
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Получаем G для отладки
         Player.G = getIntent().getExtras().getInt("G");
+        menu = new Intent(this, StartActivity.class);
+        loadAssets();
 
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
         Rect screen=new Rect(0,0,size.x,size.y);
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         renderView = new FastRenderView(this);
         setContentView(renderView);
+        collider = new Collider(screen,new TestMap(),new Player(100,100, hero),this);
+        renderView.setOnTouchListener(collider);
 
+    }
+
+    public void gameOver(){
+        menu.putExtra("message", "Игра окончена");
+        finish();
+    }
+
+    public void victory(){
+        menu.putExtra("message", "Урорвень пройден");
+        finish();
+    }
+
+    protected void onResume() {
+        super.onResume();
+        renderView.resume();
+        mediaPlayer.start();
+    }
+
+    protected void onPause() {
+        super.onPause();
+        renderView.pause();
+        mediaPlayer.pause();
+    }
+    private void loadAssets(){
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         //Загрузка картинок
         AssetManager assetManager=getAssets();
-        Bitmap sprite=null;
         mediaPlayer=new MediaPlayer();
         try {
             InputStream inputStream =assetManager.open("astronaut_small.png");
-            sprite= BitmapFactory.decodeStream(inputStream);
-            inputStream =assetManager.open("game_background.jpg");
-            background= BitmapFactory.decodeStream(inputStream);
+            hero= BitmapFactory.decodeStream(inputStream);
             inputStream.close();
-            assetManager = getAssets();
 
             AssetFileDescriptor descriptor = assetManager
                     .openFd("air_sound.mp3");
@@ -69,21 +88,6 @@ public class GameActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        map=Map.BuildMap(screen,new Player(screen.centerX(),screen.centerY(), sprite),this);
-        renderView.setOnTouchListener(map);
-
-    }
-
-    protected void onResume() {
-        super.onResume();
-        renderView.resume();
-        mediaPlayer.start();
-    }
-
-    protected void onPause() {
-        super.onPause();
-        renderView.pause();
-        mediaPlayer.pause();
     }
     //Класс для прорисовки сцены в отдельном потоке
     class FastRenderView extends SurfaceView implements Runnable {
@@ -104,7 +108,7 @@ public class GameActivity extends AppCompatActivity {
                     continue;
                 Canvas canvas = holder.lockCanvas();
                 canvas.drawRGB(0,0,0);
-                map.render(canvas);
+                collider.render(canvas);
                 holder.unlockCanvasAndPost(canvas);
                 try {
                     Thread.sleep(DELAY);
@@ -127,13 +131,11 @@ public class GameActivity extends AppCompatActivity {
         private volatile boolean running = false;
     }
     private FastRenderView renderView;
-    private Bitmap background;
-    //private Rect screen;
-    private Map map;
-    private final int GRAVITY_RADIUS=30;
+    private Collider collider;
     private static final long DELAY=30;
     private SoundPool soundPool;
     private int airSound=-1;
-    private long lastTime=0;
     private MediaPlayer mediaPlayer;
+    private Bitmap hero;
+    private Intent menu;
 }
