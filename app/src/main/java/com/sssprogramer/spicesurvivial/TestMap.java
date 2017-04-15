@@ -3,6 +3,7 @@ package com.sssprogramer.spicesurvivial;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.RectF;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,14 +15,14 @@ import java.util.Random;
  */
 
 public class TestMap extends Map{
-    public TestMap() {
-        space=new Rect(0,0,1000,2000);
+    public TestMap(Drawer drawer) {
+        space=new RectF(0,0,1000,2000);
 
         Random rnd=new Random(Calendar.getInstance().get(Calendar.MINUTE));
         for (int i=0;i<STARS_COUNT;i++){
             background.add(new Star(
                     rnd.nextFloat()*MAX_STAR_R,
-                    new Vec2f(rnd.nextInt(space.right), rnd.nextInt(space.bottom))
+                    new Vec2f(rnd.nextInt((int)space.right), rnd.nextInt((int)space.bottom)), new StarDrawer(Styles.getInstance().farStar)
             ));
         }
 
@@ -51,7 +52,7 @@ public class TestMap extends Map{
         objects.add(new Planet(25,new PointF(250,1700),160,0.05f,Styles.getInstance().magenta));
         objects.add(new Planet(27,new PointF(250,1700),220,0.03f,Styles.getInstance().magenta));
 
-        spawn= new PointF(100,100);
+        player=new Player(100, 100, new PointF(46,75), drawer);
     }
 
     @Override

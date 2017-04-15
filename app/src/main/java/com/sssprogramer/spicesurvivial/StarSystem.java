@@ -17,7 +17,7 @@ public class StarSystem {
         planets.add(star);
     }
     public void addPlanet(int mass, int size ,int orbit, float velocity/*, double startAngle*/, Paint style){
-        planets.add(new Planet(mass, size, star.pos, orbit, velocity, style));
+//        planets.add(new Planet(mass, size, star.pos, orbit, velocity, style));
     }
     private Star star;
     private List<Star> planets;

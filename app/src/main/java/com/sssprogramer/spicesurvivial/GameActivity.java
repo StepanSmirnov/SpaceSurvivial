@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -32,14 +33,14 @@ public class GameActivity extends AppCompatActivity {
 
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
-        Rect screen=new Rect(0,0,size.x,size.y);
+        RectF screen=new RectF(0,0,size.x,size.y);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         renderView = new FastRenderView(this);
         setContentView(renderView);
-        collider = new Collider(screen,new TestMap(),new Player(100,100, hero),this);
+        collider = new Collider(screen,new TestMap(new HeroDrawer(hero)),this);
         renderView.setOnTouchListener(collider);
 
     }
@@ -109,6 +110,7 @@ public class GameActivity extends AppCompatActivity {
                 Canvas canvas = holder.lockCanvas();
                 canvas.drawRGB(0,0,0);
                 collider.render(canvas);
+                canvas.drawText(String.valueOf(collider.getCO2()), 50, 50,Styles.getInstance().score);
                 holder.unlockCanvasAndPost(canvas);
                 try {
                     Thread.sleep(DELAY);

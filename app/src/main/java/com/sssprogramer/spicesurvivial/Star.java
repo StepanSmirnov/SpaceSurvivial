@@ -9,17 +9,27 @@ import android.graphics.PointF;
  */
 
 public class Star extends GameObject{
-    public Star(float mass, float size, Vec2f center, Paint style) {
+//    TODO Привести в порядок конструкторы
+    public Star(float mass, float size, Vec2f center, StarDrawer drawer/*, Paint style*/) {
+        super(drawer);
         this.mass=mass;
         this.size=size;
         pos=center;
-        this.style=style;
     }
 
-    public Star(float size, Vec2f center){
+    public Star(float size, Vec2f center, Drawer drawer){
+        super(drawer);
         this.size=size;
         pos=center;
-        this.style=Styles.getInstance().farStar;
+        this.mass=0;
+    }
+
+    public Star(float mass, float size, Vec2f center, Paint style){
+        super(new StarDrawer(style));
+        this.mass=mass;
+        this.size=size;
+        pos=center;
+        this.mass=0;
     }
 
     @Override
@@ -27,11 +37,6 @@ public class Star extends GameObject{
         return pos;
     }
 
-    @Override
-    public void draw(Canvas canvas) {
-        canvas.drawCircle(pos.x,pos.y,size,style);
-    }
-
-    public float mass=0;
-    protected Paint style;
+//    protected Vec2f pos;
+    public float size;
 }
